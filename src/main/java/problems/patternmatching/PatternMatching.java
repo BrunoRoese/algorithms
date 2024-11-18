@@ -2,39 +2,43 @@ package problems.patternmatching;
 
 import problems.Problem;
 import problems.ProblemType;
-import problems.exceptions.BadValueException;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Scanner;
 
+import static problems.patternmatching.Utils.*;
+
 public class PatternMatching implements Problem {
 
-    private String s1;
-    private String s2;
     private int finalResult;
+    private Duration timeCounter;
 
     @Override
     public void solve() {
-        startValue();
-
-        findString();
-
-        System.out.println(this);
-    }
-
-    public void startValue() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter two string separated by space: ");
         String list = scanner.nextLine();
 
         List<String> value = List.of(list.split(" "));
 
-        if (value.size() > 2) {
-            throw new BadValueException("Only two values are allowed");
+        String largeString;
+        String subString;
+        if (value.size() < 2) {
+            largeString = getBigString();
+            subString = getSubString(5);
+        } else {
+            largeString = value.getFirst();
+            subString = value.getLast();
         }
 
-        this.s1 = value.getFirst();
-        this.s2 = value.get(1);
+        long startTime = System.currentTimeMillis();
+        findString(largeString, subString);
+        long endTime = System.currentTimeMillis();
+
+        this.timeCounter = Duration.ofMillis(endTime - startTime);
+
+        System.out.println(this);
     }
 
     @Override
@@ -42,7 +46,7 @@ public class PatternMatching implements Problem {
         return ProblemType.PATTERN_MATCHING;
     }
 
-    private void findString() {
+    private void findString(String s1, String s2) {
         int s2Size = s2.length();
         char[] result = new char[s2Size];
         int s2CharPos = 0;
@@ -78,10 +82,10 @@ public class PatternMatching implements Problem {
 
     @Override
     public String toString() {
-        return "PatternMatching{" +
-                "s1='" + s1 + '\'' +
-                ", s2='" + s2 + '\'' +
-                ", finalResult=" + finalResult +
-                '}';
+        return "Final result counter: " +
+                finalResult +
+                "\n" +
+                "Time counter: " +
+                timeCounter;
     }
 }

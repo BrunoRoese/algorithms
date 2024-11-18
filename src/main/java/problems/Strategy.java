@@ -1,5 +1,7 @@
 package problems;
 
+import problems.exceptions.BadValueException;
+
 import java.util.List;
 
 public class Strategy {
@@ -11,11 +13,16 @@ public class Strategy {
     }
 
     public void solve(ProblemType types) {
-        this.problems
-                .stream()
-                .filter(problem -> problem.getType().equals(types))
-                .peek(problem -> System.out.println("Solving " + problem.getType()))
-                .findFirst()
-                .ifPresent(Problem::solve);
+        try {
+            this.problems
+                    .stream()
+                    .filter(problem -> problem.getType().equals(types))
+                    .peek(problem -> System.out.println("Solving " + problem.getType()))
+                    .findFirst()
+                    .ifPresent(Problem::solve);
+        } catch (BadValueException be) {
+            System.out.println("Bad value entered, try again");
+            solve(types);
+        }
     }
 }
